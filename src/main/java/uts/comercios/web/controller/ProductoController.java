@@ -9,13 +9,18 @@ import uts.comercios.web.service.ProductoService;
 import java.net.URI;
 import java.util.List;
 
-@RestController("/api/producto")
+@RestController
+@RequestMapping("/api/productos")
 public class ProductoController {
 
     private ProductoService productoService;
 
+    public ProductoController(ProductoService productoService) {
+        this.productoService = productoService;
+    }
+
     @PostMapping
-    public ResponseEntity<ProductoDto>  createProducto(ProductoDto productoDto) {
+    public ResponseEntity<ProductoDto>  createProducto(@RequestBody ProductoDto productoDto) {
         var producto = productoService.createProducto(productoDto);
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -26,7 +31,7 @@ public class ProductoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductoDto> findProductoById(Long id) {
+    public ResponseEntity<ProductoDto> findProductoById(@RequestParam Long id) {
         var producto = productoService.findProductoById(id);
         return ResponseEntity.ok(producto);
     }
@@ -38,14 +43,19 @@ public class ProductoController {
     }
 
     @PatchMapping
-    public ResponseEntity<ProductoDto> updateProducto(ProductoDto productoDto) {
+    public ResponseEntity<ProductoDto> updateProducto(@RequestBody ProductoDto productoDto) {
         var producto = productoService.updateProducto(productoDto);
         return ResponseEntity.ok(producto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProducto(Long id) {
+    public ResponseEntity<Void> deleteProducto(@RequestParam Long id) {
         productoService.deleteProducto(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello World!";
     }
 }
